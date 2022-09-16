@@ -37,6 +37,11 @@ function recordKey(e){
         console.log(paddleX)
     }
 }
+app.ballReset = function(){
+    ballSpeedX = -ballSpeedX
+    ballX = canvas.width / 2
+    ballY = canvas.height / 2
+}
 
 app.game = function(){
     canvas = document.getElementById("gameCanvas")
@@ -53,10 +58,21 @@ app.game = function(){
 app.moveEverything = function(){
     ballX = ballX + ballSpeedX;
     ballY = ballY + ballSpeedY;
-    if(ballX > canvas.width || ballX < 0 || ballX === paddleX){
+    if(ballX < 0){
+        if(ballY > paddleY && ballY < paddleY + paddleHeight){
+            ballSpeedX = -ballSpeedX
+        }else{
+            app.ballReset()
+        }
+    }
+    if(ballX > canvas.width){
         ballSpeedX = -ballSpeedX
     }
-    if(ballY < 0 || ballY > canvas.height || ballY === paddleY){
+
+    if(ballY < 0){
+        ballSpeedY = - ballSpeedY
+    }
+    if (ballY > canvas.height) {
         ballSpeedY = - ballSpeedY
     }
 }
