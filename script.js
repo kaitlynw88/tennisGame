@@ -13,25 +13,37 @@ let paddle2Y = 250
 const paddleThickness = 15
 const paddleHeight = 100;
 
-document.addEventListener('keydown', recordKey);
+// document.addEventListener('keydown', recordKey);
 
-function recordKey(e){
-    keydown = e.key 
-    console.log(keydown)
-    if(keydown === "w" && paddleY > 0){
+// function recordKey(e){
+//     keydown = e.key 
+//     console.log(keydown)
+//     if(keydown === "w" && paddleY > 0){
+//         paddleY -= 30
+//     }
+//     if (keydown === "s" && paddleY < (600 - paddleHeight)) {
+//         paddleY += 30
+//     } 
+// }
+
+
+app.recordKey = function(e) {
+    
+    keydown = e.key
+    console.log("keydown")
+    if (keydown === "w" && paddleY > 0) {
         paddleY -= 30
     }
     if (keydown === "s" && paddleY < (600 - paddleHeight)) {
         paddleY += 30
     }
-    
 }
 
 app.computerMovement = function(){
     let paddle2YCenter = paddle2Y + (paddleHeight / 2)
-    if(paddle2YCenter < ballY){
+    if (paddle2YCenter < ballY - 20 && paddle2Y + paddleHeight < canvas.height){
         paddle2Y += 10
-    }else{
+    } else if (paddle2YCenter > ballY + 20 && paddle2Y > 0) {
         paddle2Y -= 10
     }
 }
@@ -56,7 +68,7 @@ app.game = function(){
 
 app.moveEverything = function(){
     app.computerMovement()
-
+    document.addEventListener('keydown', app.recordKey);
     ballX = ballX + ballSpeedX;
     ballY = ballY + ballSpeedY;
     if(ballX < 0){
