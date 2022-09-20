@@ -9,34 +9,33 @@ let ballSpeedY = 4
 
 let paddleY = 250
 let paddleX = 0
+let paddle2Y = 250
+const paddleThickness = 15
 const paddleHeight = 100;
-
-
 
 document.addEventListener('keydown', recordKey);
 
 function recordKey(e){
-    // let rect = canvas.getBoundingClientRect()
-    // let root = document.documentElement;
     keydown = e.key 
     console.log(keydown)
     if(keydown === "w" && paddleY > 0){
-        paddleY = paddleY - 15
-        console.log(paddleY)
+        paddleY -= 30
     }
     if (keydown === "s" && paddleY < (600 - paddleHeight)) {
-        paddleY = paddleY + 15
-        console.log(paddleY)
+        paddleY += 30
     }
-    if (keydown === "a" && paddleX > 0) {
-        paddleX = paddleX - 15
-        console.log(paddleY)
-    }
-    if (keydown === "d") {
-        paddleX = paddleX + 10
-        console.log(paddleX)
+    
+}
+
+app.computerMovement = function(){
+    let paddle2YCenter = paddle2Y + (paddleHeight / 2)
+    if(paddle2YCenter < ballY){
+        paddle2Y += 10
+    }else{
+        paddle2Y -= 10
     }
 }
+
 app.ballReset = function(){
     ballSpeedX = -ballSpeedX
     ballX = canvas.width / 2
@@ -56,6 +55,8 @@ app.game = function(){
 }
 
 app.moveEverything = function(){
+    app.computerMovement()
+
     ballX = ballX + ballSpeedX;
     ballY = ballY + ballSpeedY;
     if(ballX < 0){
@@ -66,7 +67,11 @@ app.moveEverything = function(){
         }
     }
     if(ballX > canvas.width){
-        ballSpeedX = -ballSpeedX
+        if (ballY > paddle2Y && ballY < paddle2Y + paddleHeight) {
+            ballSpeedX = -ballSpeedX
+        } else {
+            app.ballReset()
+        }
     }
 
     if(ballY < 0){
@@ -88,7 +93,9 @@ app.drawEverything = function(){
     // fill the canvas with Blackness
     app.colorRect(0, 0, canvas.width, canvas.height, "black")
     // this is the left paddle
-    app.colorRect(paddleX, paddleY, 10, 100, "white")
+    app.colorRect(paddleX, paddleY, paddleThickness, paddleHeight, "white")
+    //this is the right paddle
+    app.colorRect(canvas.width - paddleThickness, paddle2Y, paddleThickness, paddleHeight, "white")
     // this is the ball 
     app.colorCircle(ballX, ballY, 10, "white")
 }
